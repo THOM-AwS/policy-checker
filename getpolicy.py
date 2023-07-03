@@ -63,7 +63,10 @@ def get_roles(session, roles, account_id):
         try:
             # Get and print the role policies
             role_policies = get_role_policies(session, role_name, account_id)
-            # todo: dump to file, named for acc, role
+            
+            with open(f'./permissions/{account_id}_{role_name}_permission_policy.json', 'w') as f:
+                        json.dump(role_policies, f, indent=4)
+
             print (json.dumps(role_policies))
             # for policy_document in role_policies:
             #     print(f'Policy Document: {policy_document}')
