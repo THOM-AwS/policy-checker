@@ -1,5 +1,6 @@
 import boto3
 import json
+import os
 
 def get_all_accounts():
     organizations_client = boto3.client('organizations')
@@ -51,8 +52,6 @@ def get_role_policies(session, role_name, account_id):
         policies['attached'][policy_arn]=policy_document
         # dump_policy(acc, arn, document)
         # policies['attached'].append(policy_arn)
-
-
     return policies
 
 def get_roles(session, roles, account_id):
@@ -88,11 +87,12 @@ def process_role_policies(accounts):
         account_id = account['Id']
 
         if account_id == master_account_id:
-            # iam_client = boto3.client('iam')
-            # response = iam_client.list_roles()
-            # roles = response['Roles']
-            # print(f'Roles in master account')
-            # get_roles(roles, account_id)
+            print("This is the master account")
+            iam_client = boto3.client('iam')
+            response = iam_client.list_roles()
+            roles = response['Roles']
+            print(f'Roles in master account')
+            get_roles(session, roles, account_id)
             continue
         else:
             role_arn = f'arn:aws:iam::{account_id}:role/{org_access_role_name}'
